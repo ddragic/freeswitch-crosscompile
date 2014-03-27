@@ -9,6 +9,9 @@ SYSROOT=$2
 BUILD_TC_ARCH=$3
 HOST_TC_ARCH=$4
 
+# Debian (raspbian) multiarch pkg-config path.
+DEB_ARM_PKG_CONFIG_PATH="/usr/lib/arm-linux-gnueabihf/pkgconfig"
+
 if [ -z "${TOOLCHAIN_BIN}" ] || [ -z "${SYSROOT}" ] || [ -z "${BUILD_TC_ARCH}" ] || [ -z "${HOST_TC_ARCH}" ] ; then
 	echo "Usage: "`basename ${0}`" <toolchain-bin-dir> <sysroot> <build-arch> <host-arch>"
 fi
@@ -41,11 +44,6 @@ export CFLAGS="--sysroot=${SYSROOT}"
 export CXXFLAGS="${CFLAGS}"
 export LDFLAGS="--sysroot=${SYSROOT}"
 
-# sqlite
-export config_BUILD_CC="${BUILD_TC_ARCH}-gcc"
-export config_TARGET_CC="${HOST_TC_ARCH}-gcc"
-export config_TARGET_CFLAGS="${CFLAGS}"
-
-# needed for static makefiles (libs/ESL)
-export CC="${HOST_TC_ARCH}-gcc"
-export CXX="${HOST_TC_ARCH}-g++"
+# pkg-config
+export PKG_CONFIG_SYSROOT_DIR="${SYSROOT}"
+export PKG_CONFIG_PATH="${SYSROOT}${DEB_ARM_PKG_CONFIG_PATH}"
